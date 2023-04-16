@@ -37,7 +37,7 @@ class AdminController extends Controller
         $sql_line = DB::table('ankets')->where('id', $id)->get()[0];
         $name = $sql_line->name;
         $questionnaires = DB::table($name)->get()->all();
-        $array = json_decode(json_encode($questionnaires[0]), true);
+        $array = $this->std_to_array($questionnaires[0]);
         $questions = [];
         $questions['name'] = $this->get_field($name, 1);
         for ($i=0; $i<count($array); $i++) {
@@ -74,7 +74,7 @@ class AdminController extends Controller
     public function edit_page_post (Request $request, $id) {
         $request->validate(['name' => 'required']);
         $name = DB::table('ankets')->where('id', $id)->get()[0]->name;
-        $sql = DB::table($name)->where('id', 1)->get()[0];
+        $sql = DB::table($name)->where('id', 1)->get()[0]; // empty data to get columns names
         $sql = $this->std_to_array($sql);
         $sql = array_keys($sql);
         $new_values = [];
@@ -148,7 +148,7 @@ class AdminController extends Controller
         dd('ok');
     }
 
-    private function get_field($field, $back) {
+    private function get_field($field, $back) { // this function provides using spaces in column names or table names
         if (!$back) {
             return strtr($field, array(' ' => '_'));
         }
