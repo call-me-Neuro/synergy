@@ -46,7 +46,6 @@ class AdminController extends Controller
             }
             $questions[$i-2] = $this->get_field(array_keys($array)[$i], 0);
         }
-        #dd($questions, $questionnaires[1]);
 
         return view('admin_qs', ['qs' => $questionnaires, 'questions' => $questions]);
     }
