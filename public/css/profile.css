@@ -1,0 +1,134 @@
+.main {
+    color: black
+}
+
+.page {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    /*width: 100%;*/
+    height: 800px;
+}
+
+.personal_information {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 600px;
+    height: 120px;
+    background: white;
+    border-radius: 15px;
+    margin-left: 20px;
+    margin-top: 10px;
+    box-shadow: 0 5px 10px 0 rgb(0 0 0 / 10%);
+}
+
+
+.lk {
+    font-size: 32px;
+    margin-left: 20px;
+    padding-top: 10px;
+    font-family: 'Inter', serif;
+    font-weight: 700;
+}
+.ankets {
+    font-size: 32px;
+    font-family: 'Arial';
+    font-weight: 700;
+}
+
+.info_block {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 100%;
+    height: 90%;
+    padding-left: 10px;
+
+}
+
+
+.block_for_ankets {
+    width: 400px;
+    height: 230px;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    border-radius: 15px;
+    margin-left: 20px;
+    margin-top: 20px;
+    box-shadow: 0 5px 10px 0 rgb(0 0 0 / 10%);
+}
+
+.ankets_block {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.my_anket {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 360px;
+    height: 40px;
+    border-radius: 5px;
+}
+
+.my_anket_link {
+    width: 330px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    
+}
+
+.my_anket:hover {
+    background: #FFFFFF08;
+}
+
+.ankets_text {
+    padding-left: 10px;
+    text-decoration: none;
+    font-family: 'Inter', serif;
+    font-size: 16px;
+}
+
+.ankets {
+    padding-left: 30px;
+}
+
+.my_label {
+    font-family: 'Inter', serif;
+}
+
+.my_name {
+    font-size: 24px;
+}
+
+.my_passport {
+    opacity: 70%;
+}
+
+.change {
+    width: 175px;
+    height: 40px;
+    margin-left: 20px;
+    border: none;
+    border-radius: 5px;
+    background: #0d4cd3;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    margin-top: 20px;
+}
+
+.logout {
+    margin-left: 20px;
+    margin-top: 20px;
+    color: red;
+}

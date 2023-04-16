@@ -1,0 +1,92 @@
+.ankets_block {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.my_anket {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 360px;
+    height: 40px;
+    border-radius: 5px;
+}
+
+.my_anket_link {
+    width: 130px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    
+}
+
+.my_anket:hover {
+    background: #FFFFFF08;
+}
+
+.block_for_ankets {
+    width: 400px;
+    height: 230px;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    border-radius: 15px;
+    margin-left: 20px;
+    margin-top: 20px;
+    box-shadow: 0 5px 10px 0 rgb(0 0 0 / 10%);
+}
+
+.ankets {
+    font-size: 32px;
+    font-family: 'Arial';
+    font-weight: 700;
+    margin-left: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.left {
+    display: flex;
+}
+
+.right {
+    display: flex;
+    /* justify-content: space-around; */
+}
+
+.change {
+    width: 80px;
+    height: 25px;
+    margin-left: 20px;
+    border: none;
+    border-radius: 5px;
+    background: #0d4cd3;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+}
+
+.delete {
+    width: 80px;
+    height: 25px;
+    margin-left: 20px;
+    border: none;
+    border-radius: 5px;
+    background: #FF2E48;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+}
+
+#create {
+    margin-right: 20px;
+    font-weight: 400;
+}

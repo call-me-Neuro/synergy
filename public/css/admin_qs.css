@@ -1,0 +1,16 @@
+block {
+    display: flex;
+}
+
+.block {
+    width: 400px;
+    height: 230px;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    border-radius: 15px;
+    margin-left: 20px;
+    margin-top: 20px;
+    box-shadow: 0 5px 10px 0 rgb(0 0 0 / 10%);
+}
