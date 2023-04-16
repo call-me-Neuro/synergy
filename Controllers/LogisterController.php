@@ -8,9 +8,6 @@ use Illuminate\Support\Facades\App;
 class LogisterController extends Controller
 {
     public function index () {
-        $locale = request()->cookie('locale', config('app.locale'));
-        session(['locale' => $locale]);
-        app()->setLocale($locale);
         return view('login', ['user_info'=> auth()->user()]);
     }
 

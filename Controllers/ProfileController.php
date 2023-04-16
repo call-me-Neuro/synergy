@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use App\Rules\NameRule;
 use App\Rules\PassportRuleTwo;
 use App\Rules\PassportRuleOne;
@@ -11,7 +12,7 @@ use App\Rules\PassportRuleOne;
 class ProfileController extends Controller
 {
     public function profile () {
-        $ankets = DB::select('SELECT * FROM ankets WHERE active = ?', [1]);
+        $ankets = DB::table('ankets')->where('active', 1)->get()->all();
 
         for ($i=0; $i<count($ankets);$i++) {
             $ankets[$i]->name = $this->get_field($ankets[$i]->name, 1);
@@ -48,10 +49,10 @@ class ProfileController extends Controller
     }
 
     public function get ($id) {
-        $sql_line = DB::select('select * from ankets where id=?', [$id])[0];
+        $sql_line = DB::table('ankets')->where('id', $id)->get()[0];
         $name = $sql_line->name;
-        $text = DB::select('select * from '.$name);
-        $array = json_decode(json_encode($text[0]), true);
+        $text = DB::table($name)->get()->all();
+        $array = $this->std_to_array($text[0]);
         $questions = [];
         $questions['name'] = $this->get_field($name, 1);
         for ($i=0; $i<count($array); $i++) {
@@ -66,48 +67,20 @@ class ProfileController extends Controller
 
     public function get_post (Request $request) {
         $name = $this->get_field($request->name, 0);
-        $text = DB::table($name)->get();
-        $array = array_keys(json_decode(json_encode($text[0]), true));
-        $form = ['user_id' => auth()->user()->getAuthIdentifier()];
-        $sql_string = '(';
-        $sql_values = '(';
-        for ($i=0; $i<count($array); $i++) {
-            if ($i == 0) {
-                continue;
-            }
-            if ($i == 1) {
-                $sql_string = $sql_string.$array[$i].', ';
-                $sql_values = $sql_values.'?, ';
-                continue;
-            }
-            $word = $this->get_field($array[$i], 0);
-            $form[$array[$i]] = $request->$word;
-            $sql_string = $sql_string.$array[$i];
-            $sql_values = $sql_values.'?';
-            if ($i != count($array)-1) {
-                $sql_string = $sql_string.', ';
-                $sql_values = $sql_values.', ';
-            }
-            else {
-                $sql_string = $sql_string.')';
-                $sql_values = $sql_values.')';
-            }
+        $text = DB::table($name)->get()[0];
+        $array = $this->std_to_array($text);
+        $form = array_keys($array);
+        array_shift($form);array_shift($form);
+        
+        $insert_array = [];
+        for ($i=0; $i<count($form); $i++) {
+            $str = $form[$i];
+            $insert_array[$this->get_field($form[$i], 0)] = $request->$str;
         }
-       # dd($form);
-        $form_keys = array_keys($form);
-        array_shift($form_keys);
-        #dd($form_keys);
-        foreach ($form_keys as $key) {
-            $key = $this->get_field($key, 1);
-            $request->validate([$key => 'required'],
-            [
-                sprintf('%s.required', $key) => sprintf('%s field is required', $key)
-            ]);
-        }
-        $sql_line = 'INSERT INTO '.$name.' '.$sql_string.' values '.$sql_values;
-        DB::insert($sql_line, array_values($form));
-        #dd($sql_line, $form);
-        dd($form);
+        $insert_array['user_id'] = Auth::id();
+
+        DB::table($name)->insert($insert_array);
+        return redirect('/profile'); 
     }
 
     private function get_field($field, $back) {
@@ -117,5 +90,9 @@ class ProfileController extends Controller
         else {
             return strtr($field, array('_' => ' '));
         }
+    }
+
+    private function std_to_array($std) {
+        return json_decode(json_encode($std), true);
     }
 }

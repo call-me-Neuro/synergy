@@ -23,13 +23,12 @@ class MySiteController extends Controller
     }
 
     public function confirm_email ($id) {
-        $sql = DB::select('SELECT * from confirms WHERE code = ?', [$id])[0];
-        #dd($sql->created_at);
-
+        $sql = DB::table('confirms')->where('code', $id)->get()[0];
 
         $time1 = Carbon::parse($sql->created_at)->addMinutes(10);
         $time2 = Carbon::now()->addHours(3);
         $time1->addMinutes($sql->time);
+
         if ($time2->lessThan($time1)) {
             auth()->user()->update(["new_value"=>$sql->new_value]);
             $deleted = DB::delete('delete from confirms where code = ?', [$id]);
@@ -46,8 +45,8 @@ class MySiteController extends Controller
         ]);
         $code = $this->create_password();
         $time = 10;
-        $sql_values = [$code, $time, $request->email2];
-        DB::insert('INSERT INTO confirms (code, time, new_value) values (?, ?, ?)', $sql_values);
+        $insert_array = [$code, $time, $request->email2];
+        DB::table('confirms')->insert($insert_array);
         dd($code);
     }
     public function change_email_page () {
