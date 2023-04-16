@@ -14,11 +14,13 @@ use Illuminate\Support\Facades\App;
 class MySiteController extends Controller
 {
 
-    public function set_locale($locale) {
+    public function set_locale($locale) { // changing language
         session(['locale' => $locale]);
         App::setLocale($locale);
-        $user = auth()->user();
-        $user->update(['language' => $locale]);
+        if (auth()->check()) {
+            $user = auth()->user();
+            $user->update(['language' => $locale]);
+        }
         return redirect()->back();
     }
 
@@ -26,7 +28,7 @@ class MySiteController extends Controller
         $sql = DB::table('confirms')->where('code', $id)->get()[0];
 
         $time1 = Carbon::parse($sql->created_at)->addMinutes(10);
-        $time2 = Carbon::now()->addHours(3);
+        $time2 = Carbon::now()->addHours(3); // +3 пояс
         $time1->addMinutes($sql->time);
 
         if ($time2->lessThan($time1)) {
@@ -37,7 +39,6 @@ class MySiteController extends Controller
     }
 
     public function change_email_create (Request $request) {
-        #dd($request->email2);
         $request->validate(['email2' => 'required|email'],
         [
             'email2.required' => 'Enter your new email',
@@ -62,7 +63,6 @@ class MySiteController extends Controller
 
     public function confirm_password ($id) {
         $sql = DB::select('SELECT * from confirms WHERE code = ?', [$id])[0];
-        #dd($sql->new_value, Crypt::decry);
         $time1 = Carbon::parse($sql->created_at)->addMinutes(10);
         $time2 = Carbon::now()->addHours(3);
         $time1->addMinutes($sql->time);
@@ -87,7 +87,6 @@ class MySiteController extends Controller
         $code = $this->create_password();
         $time = 10;
         $password = Crypt::encryptString($request->password2);
-        #dd($password, $password2);
         $sql_values = [$code, $time, $password];
         DB::insert('INSERT INTO confirms (code, time, new_value) values (?, ?, ?)', $sql_values);
         dd($code);
