@@ -31,13 +31,16 @@ Route::middleware(['set_locale'])->group(function () {
     Route::get('/logout', 'App\Http\Controllers\LogisterController@logout');
     Route::get('/setlocale/{locale}', 'App\Http\Controllers\MySiteController@set_locale')->name('setlocale');
 
-    Route::get('/admin', 'App\Http\Controllers\AdminController@index');
-    Route::get('/admin/q/{id}', 'App\Http\Controllers\AdminController@get_qs');
-    Route::get('/admin/edit/{id}', 'App\Http\Controllers\AdminController@edit_page');
-    Route::post('/admin/edit/{id}/post', 'App\Http\Controllers\AdminController@edit_page_post');
-    Route::get('/admin/create', 'App\Http\Controllers\AdminController@create_get');
-    Route::post('/admin/create/create', 'App\Http\Controllers\AdminController@create_post');
-    Route::get('/admin/delete/{id}', 'App\Http\Controllers\AdminController@delete_questionnaire');
+    Route::middleware(['is_admin'])->group(function () {
+        Route::get('/admin', 'App\Http\Controllers\AdminController@index');
+        Route::get('/admin/q/{id}', 'App\Http\Controllers\AdminController@get_qs');
+        Route::get('/admin/edit/{id}', 'App\Http\Controllers\AdminController@edit_page');
+        Route::post('/admin/edit/{id}/post', 'App\Http\Controllers\AdminController@edit_page_post');
+        Route::get('/admin/create', 'App\Http\Controllers\AdminController@create_get');
+        Route::post('/admin/create/create', 'App\Http\Controllers\AdminController@create_post');
+        Route::get('/admin/delete/{id}', 'App\Http\Controllers\AdminController@delete_questionnaire');
+    });
+    
     Route::middleware(['auth'])->group(function () {
         Route::get('/profile', 'App\Http\Controllers\ProfileController@profile')->name('profile');
         Route::get('/profile/edit', 'App\Http\Controllers\ProfileController@profile_edit');
