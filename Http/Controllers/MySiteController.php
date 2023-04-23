@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\App;
 class MySiteController extends Controller
 {
 
-    public function set_locale($locale) { // changing language
+    public function set_locale($locale) {
         session(['locale' => $locale]);
         App::setLocale($locale);
         if (auth()->check()) {
@@ -25,14 +25,17 @@ class MySiteController extends Controller
     }
 
     public function confirm_email ($id) {
-        $sql = DB::table('confirms')->where('code', $id)->get()[0];
-
+        $sql = DB::table('confirms')->where('code', $id)->get();
+        if (!isset($sql[0])) {
+            return redirect('/home');
+        }
+        $sql = $sql[0];
         $time1 = Carbon::parse($sql->created_at)->addMinutes(10);
-        $time2 = Carbon::now()->addHours(3); // +3 пояс
+        $time2 = Carbon::now()->addHours(3);
         $time1->addMinutes($sql->time);
 
         if ($time2->lessThan($time1)) {
-            auth()->user()->update(["new_value"=>$sql->new_value]);
+            auth()->user()->update(["email"=>$sql->new_value]);
             $deleted = DB::delete('delete from confirms where code = ?', [$id]);
         }
         return redirect('/profile');
@@ -62,7 +65,12 @@ class MySiteController extends Controller
 
 
     public function confirm_password ($id) {
-        $sql = DB::select('SELECT * from confirms WHERE code = ?', [$id])[0];
+        $sql = DB::select('SELECT * from confirms WHERE code = ?', [$id]);
+        
+        if (!isset($sql[0])) {
+            return redirect('/home');
+        }
+        $sql = $sql[0];
         $time1 = Carbon::parse($sql->created_at)->addMinutes(10);
         $time2 = Carbon::now()->addHours(3);
         $time1->addMinutes($sql->time);
@@ -87,6 +95,7 @@ class MySiteController extends Controller
         $code = $this->create_password();
         $time = 10;
         $password = Crypt::encryptString($request->password2);
+        #dd($password, $password2);
         $sql_values = [$code, $time, $password];
         DB::insert('INSERT INTO confirms (code, time, new_value) values (?, ?, ?)', $sql_values);
         dd($code);
@@ -111,5 +120,9 @@ class MySiteController extends Controller
             $string = $string . $s;
         }
         return $string;
+    }
+
+    private function update_confirms () {
+        $confirms = DB::table('confirms')->get()->all();
     }
 }
